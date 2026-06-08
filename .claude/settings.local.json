@@ -1,7 +1,15 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-git --yes)"
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-git --yes)",
+      "Bash(npm install *)",
+      "Bash(node -e \"const pkg = require\\('./node_modules/@base-ui/react/package.json'\\); console.log\\(pkg.version\\)\")",
+      "Bash(node -e ' *)",
+      "Bash(npx tsc *)",
+      "Bash(sed -i 's/^\"use client\";$/\"use client\";\\\\n\\\\nexport const dynamic = \"force-dynamic\";/' \\\\ *)"
+    ],
+    "additionalDirectories": [
+      "/home/didin/Projects/hidroponik-logbook/src/app/batches/[id]"
     ]
   }
 }

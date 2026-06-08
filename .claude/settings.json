@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker --version)",
+      "Bash(docker compose *)",
+      "Bash(curl -sSL https://raw.githubusercontent.com/supabase/supabase/master/docker/volumes/db/realtime.sql -o /tmp/check.txt)",
+      "Read(//tmp/**)",
+      "Bash(curl -sSL \"https://raw.githubusercontent.com/supabase/supabase/master/docker/volumes/api/kong.yml\" -o /tmp/kong_check.txt)",
+      "Bash(mkdir -p api)",
+      "Bash(curl -sSL \"https://raw.githubusercontent.com/supabase/supabase/master/docker/volumes/api/kong.yml\" -o api/kong.yml)"
+    ]
+  }
+}
