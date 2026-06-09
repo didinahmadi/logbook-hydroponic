@@ -1,4 +1,8 @@
 export type BatchStatus = "active" | "harvested";
+export type GrowingMethod = "hydroponic" | "soil" | "polybag" | "pot" | "cocopeat";
+export type PlantStageStatus = "seedling" | "vegetative" | "flowering" | "fruiting" | "harvesting";
+export type SoilCondition = "dry" | "normal" | "wet";
+export type ApplicationMethod = "watering" | "spray" | "spread";
 
 export interface Plant {
   id: string;
@@ -26,6 +30,8 @@ export interface Batch {
   seed_date: string;
   hole_count: number;
   status: BatchStatus;
+  growing_method: GrowingMethod;
+  current_stage: PlantStageStatus;
   created_at: string;
 }
 
@@ -41,13 +47,26 @@ export interface LogPhoto {
   created_at: string;
 }
 
+export interface LogPhotoWithDate extends LogPhoto {
+  log_date: string;
+}
+
 export interface DailyLog {
   id: string;
   batch_id: string;
-  ppm_actual: number;
-  ph_actual: number;
+  ppm_actual: number | null;
+  ph_actual: number | null;
   note: string | null;
   created_at: string;
+  watered_today: boolean | null;
+  water_amount_ml: number | null;
+  soil_condition: SoilCondition | null;
+  plant_height_cm: number | null;
+  fertilizer_name: string | null;
+  fertilizer_amount: string | null;
+  application_method: ApplicationMethod | null;
+  problem_name: string | null;
+  treatment: string | null;
   log_photos?: LogPhoto[];
 }
 
@@ -68,3 +87,7 @@ export interface BatchStats {
   phMax: number;
   daysUntilHarvest: number;
 }
+
+export type TimelineEvent =
+  | { type: "log"; date: string; data: DailyLog }
+  | { type: "harvest"; date: string; data: Harvest };

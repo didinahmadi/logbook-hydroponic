@@ -11,7 +11,6 @@ import { toast } from "sonner";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
@@ -21,6 +20,9 @@ import { LogPhotoGallery } from "@/components/logs/LogPhotoGallery";
 import { useBatch } from "@/hooks/useBatches";
 import { useDailyLogs } from "@/hooks/useDailyLogs";
 import { deleteDailyLog } from "@/services/batches";
+import {
+  SOIL_CONDITION_LABELS, APPLICATION_METHOD_LABELS,
+} from "@/utils/labels";
 
 export default function LogsPage({
   params,
@@ -30,6 +32,7 @@ export default function LogsPage({
   const { id: batchId } = use(params);
   const { batch } = useBatch(batchId);
   const { logs, loading, refetch } = useDailyLogs(batchId);
+  const isHydroponic = batch?.growing_method === "hydroponic";
 
   async function handleDelete(logId: string) {
     try {
@@ -58,7 +61,11 @@ export default function LogsPage({
           </div>
 
           {batch?.status === "active" && (
-            <AddLogDialog batchId={batchId} onSuccess={refetch} />
+            <AddLogDialog
+              batchId={batchId}
+              growingMethod={batch.growing_method}
+              onSuccess={refetch}
+            />
           )}
         </div>
 
@@ -78,13 +85,53 @@ export default function LogsPage({
               {logs.map((log) => (
                 <div key={log.id} className="p-4">
                   <div className="flex items-start justify-between gap-2">
-                    {/* Left: measurements + note */}
-                    <div className="space-y-0.5">
-                      <p className="text-sm font-semibold">
-                        PPM: {log.ppm_actual}
-                        <Separator orientation="vertical" className="inline-block mx-1.5 h-3 align-middle" />
-                        pH: {log.ph_actual}
-                      </p>
+                    <div className="space-y-1 flex-1 min-w-0">
+                      {/* Measurements row */}
+                      <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-sm font-semibold text-gray-800">
+                        {isHydroponic && log.ppm_actual != null && (
+                          <span>PPM: {log.ppm_actual}</span>
+                        )}
+                        {isHydroponic && log.ph_actual != null && (
+                          <span>pH: {log.ph_actual}</span>
+                        )}
+                        {log.plant_height_cm != null && (
+                          <span>📏 {log.plant_height_cm} cm</span>
+                        )}
+                      </div>
+
+                      {/* Watering */}
+                      {log.watered_today && (
+                        <p className="text-sm text-blue-600">
+                          💧 Disiram{log.water_amount_ml ? ` · ${log.water_amount_ml} ml` : ""}
+                        </p>
+                      )}
+
+                      {/* Soil condition */}
+                      {!isHydroponic && log.soil_condition && (
+                        <p className="text-sm text-amber-700">
+                          🌱 Tanah: {SOIL_CONDITION_LABELS[log.soil_condition]}
+                        </p>
+                      )}
+
+                      {/* Fertilizer */}
+                      {log.fertilizer_name && (
+                        <p className="text-sm text-green-700">
+                          🌿 {log.fertilizer_name}
+                          {log.fertilizer_amount ? ` · ${log.fertilizer_amount}` : ""}
+                          {log.application_method ? ` · ${APPLICATION_METHOD_LABELS[log.application_method]}` : ""}
+                        </p>
+                      )}
+
+                      {/* Problem */}
+                      {log.problem_name && (
+                        <div>
+                          <p className="text-sm text-red-600 font-medium">⚠️ {log.problem_name}</p>
+                          {log.treatment && (
+                            <p className="text-xs text-gray-500 mt-0.5">Penanganan: {log.treatment}</p>
+                          )}
+                        </div>
+                      )}
+
                       {log.note && (
                         <p className="text-sm text-gray-500">{log.note}</p>
                       )}
@@ -93,7 +140,6 @@ export default function LogsPage({
                       </p>
                     </div>
 
-                    {/* Right: delete button */}
                     {batch?.status === "active" && (
                       <AlertDialog>
                         <AlertDialogTrigger className="shrink-0 inline-flex items-center justify-center rounded-md p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 transition-colors">
@@ -120,7 +166,6 @@ export default function LogsPage({
                     )}
                   </div>
 
-                  {/* Photos */}
                   {log.log_photos && log.log_photos.length > 0 && (
                     <LogPhotoGallery
                       photos={log.log_photos}

@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { BatchWithPlant } from "@/types";
 import { calculateBatchStats } from "@/utils/batch";
+import { GROWING_METHOD_LABELS, PLANT_STAGE_LABELS } from "@/utils/labels";
 
 interface BatchCardProps {
   batch: BatchWithPlant;
@@ -15,6 +16,7 @@ interface BatchCardProps {
 
 export function BatchCard({ batch, stages }: BatchCardProps) {
   const stats = calculateBatchStats(batch.seed_date, batch.plant, stages);
+  const isHydroponic = batch.growing_method === "hydroponic";
 
   return (
     <Card className="hover:shadow-md transition-shadow">
@@ -28,10 +30,20 @@ export function BatchCard({ batch, stages }: BatchCardProps) {
             {batch.status === "active" ? "Aktif" : "Panen"}
           </Badge>
         </div>
-        <p className="text-sm text-gray-500 flex items-center gap-1">
-          <Leaf className="h-3 w-3" />
-          {batch.plant.name}
-        </p>
+        <div className="flex items-center gap-2 flex-wrap">
+          <p className="text-sm text-gray-500 flex items-center gap-1">
+            <Leaf className="h-3 w-3" />
+            {batch.plant.name}
+          </p>
+          <span className="text-xs text-gray-400">·</span>
+          <span className="text-xs text-blue-600 font-medium">
+            {GROWING_METHOD_LABELS[batch.growing_method]}
+          </span>
+          <span className="text-xs text-gray-400">·</span>
+          <span className="text-xs text-purple-600 font-medium">
+            {PLANT_STAGE_LABELS[batch.current_stage]}
+          </span>
+        </div>
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="grid grid-cols-2 gap-2 text-sm">
@@ -45,7 +57,7 @@ export function BatchCard({ batch, stages }: BatchCardProps) {
           </div>
         </div>
 
-        {stats.ppmMin !== null && (
+        {isHydroponic && stats.ppmMin !== null && (
           <div className="flex items-center gap-1.5 text-sm text-gray-600">
             <Droplets className="h-3.5 w-3.5 text-blue-500" />
             <span>

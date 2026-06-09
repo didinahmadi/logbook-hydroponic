@@ -17,6 +17,11 @@ import {
 } from "@/components/ui/select";
 import { usePlants } from "@/hooks/usePlants";
 import { createBatch } from "@/services/batches";
+import type { GrowingMethod, PlantStageStatus } from "@/types";
+import {
+  GROWING_METHOD_LABELS, GROWING_METHODS,
+  PLANT_STAGE_LABELS, PLANT_STAGES,
+} from "@/utils/labels";
 
 export default function NewBatchPage() {
   const router = useRouter();
@@ -24,10 +29,10 @@ export default function NewBatchPage() {
 
   const [name, setName] = useState("");
   const [plantId, setPlantId] = useState("");
-  const [seedDate, setSeedDate] = useState(
-    new Date().toISOString().split("T")[0]
-  );
+  const [seedDate, setSeedDate] = useState(new Date().toISOString().split("T")[0]);
   const [holeCount, setHoleCount] = useState("");
+  const [growingMethod, setGrowingMethod] = useState<GrowingMethod>("hydroponic");
+  const [currentStage, setCurrentStage] = useState<PlantStageStatus>("seedling");
   const [saving, setSaving] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -43,11 +48,13 @@ export default function NewBatchPage() {
         plant_id: plantId,
         seed_date: seedDate,
         hole_count: parseInt(holeCount) || 0,
+        growing_method: growingMethod,
+        current_stage: currentStage,
       });
       toast.success("Batch berhasil dibuat!");
       router.push("/batches");
-    } catch (err: any) {
-      toast.error(err.message ?? "Terjadi kesalahan");
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Terjadi kesalahan");
     }
     setSaving(false);
   }
@@ -77,7 +84,7 @@ export default function NewBatchPage() {
                 <Label htmlFor="name">Nama Batch</Label>
                 <Input
                   id="name"
-                  placeholder="contoh: Tower A, NFT Pipe 1"
+                  placeholder="contoh: Polybag Cabe 1, NFT Pakcoy"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
@@ -104,6 +111,44 @@ export default function NewBatchPage() {
                 </Select>
               </div>
 
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label>Metode Tanam</Label>
+                  <Select value={growingMethod} onValueChange={(v) => setGrowingMethod((v ?? "hydroponic") as GrowingMethod)}>
+                    <SelectTrigger className="w-full">
+                      <span className="text-foreground">
+                        {GROWING_METHOD_LABELS[growingMethod]}
+                      </span>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {GROWING_METHODS.map((m) => (
+                        <SelectItem key={m} value={m}>
+                          {GROWING_METHOD_LABELS[m]}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Fase Awal</Label>
+                  <Select value={currentStage} onValueChange={(v) => setCurrentStage((v ?? "seedling") as PlantStageStatus)}>
+                    <SelectTrigger className="w-full">
+                      <span className="text-foreground">
+                        {PLANT_STAGE_LABELS[currentStage]}
+                      </span>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {PLANT_STAGES.map((s) => (
+                        <SelectItem key={s} value={s}>
+                          {PLANT_STAGE_LABELS[s]}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="seedDate">Tanggal Semai</Label>
                 <Input
@@ -116,7 +161,7 @@ export default function NewBatchPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="holeCount">Jumlah Lubang</Label>
+                <Label htmlFor="holeCount">Jumlah Unit (lubang/pot/polybag)</Label>
                 <Input
                   id="holeCount"
                   type="number"

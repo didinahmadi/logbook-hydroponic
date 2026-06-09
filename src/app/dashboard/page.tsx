@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Plus } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { BatchCard } from "@/components/batches/BatchCard";
+import { TodaysTasks } from "@/components/dashboard/TodaysTasks";
 import { Button } from "@/components/ui/button";
 import { useActiveBatches } from "@/hooks/useBatches";
 import { usePlantStages } from "@/hooks/usePlants";
@@ -58,7 +59,7 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-            <p className="text-sm text-gray-500 mt-1">Batch aktif hari ini</p>
+            <p className="text-sm text-gray-500 mt-1">Pantau semua tanaman kamu</p>
           </div>
           <Link href="/batches/new">
             <Button className="bg-green-600 hover:bg-green-700">
@@ -67,7 +68,12 @@ export default function DashboardPage() {
           </Link>
         </div>
 
-        <BatchGrid />
+        <TodaysTasks />
+
+        <div>
+          <h2 className="text-lg font-semibold text-gray-800 mb-3">Batch Aktif</h2>
+          <BatchGrid />
+        </div>
       </div>
     </AppLayout>
   );

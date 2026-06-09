@@ -33,6 +33,8 @@ create table public.batches (
   seed_date date not null,
   hole_count integer not null default 0,
   status text not null default 'active' check (status in ('active', 'harvested')),
+  growing_method text not null default 'hydroponic' check (growing_method in ('hydroponic', 'soil', 'polybag', 'pot', 'cocopeat')),
+  current_stage text not null default 'seedling' check (current_stage in ('seedling', 'vegetative', 'flowering', 'fruiting', 'harvesting')),
   created_at timestamptz default now()
 );
 
@@ -40,9 +42,18 @@ create table public.batches (
 create table public.daily_logs (
   id uuid primary key default gen_random_uuid(),
   batch_id uuid not null references public.batches(id) on delete cascade,
-  ppm_actual numeric(8,2) not null,
-  ph_actual numeric(4,2) not null,
+  ppm_actual numeric(8,2),
+  ph_actual numeric(4,2),
   note text,
+  watered_today boolean,
+  water_amount_ml integer,
+  soil_condition text check (soil_condition in ('dry', 'normal', 'wet')),
+  plant_height_cm numeric(6,1),
+  fertilizer_name text,
+  fertilizer_amount text,
+  application_method text check (application_method in ('watering', 'spray', 'spread')),
+  problem_name text,
+  treatment text,
   created_at timestamptz default now()
 );
 

@@ -1,10 +1,13 @@
 import { createClient } from "@/lib/supabase/client";
+import type { GrowingMethod, PlantStageStatus, SoilCondition, ApplicationMethod } from "@/types";
 
 interface CreateBatchInput {
   name: string;
   plant_id: string;
   seed_date: string;
   hole_count: number;
+  growing_method?: GrowingMethod;
+  current_stage?: PlantStageStatus;
 }
 
 export interface PhotoInput {
@@ -14,9 +17,18 @@ export interface PhotoInput {
 
 interface CreateLogInput {
   batch_id: string;
-  ppm_actual: number;
-  ph_actual: number;
-  note?: string;
+  ppm_actual?: number | null;
+  ph_actual?: number | null;
+  note?: string | null;
+  watered_today?: boolean | null;
+  water_amount_ml?: number | null;
+  soil_condition?: SoilCondition | null;
+  plant_height_cm?: number | null;
+  fertilizer_name?: string | null;
+  fertilizer_amount?: string | null;
+  application_method?: ApplicationMethod | null;
+  problem_name?: string | null;
+  treatment?: string | null;
   photos?: PhotoInput[];
 }
 
@@ -44,6 +56,15 @@ export async function createBatch(input: CreateBatchInput) {
 export async function deleteBatch(id: string) {
   const supabase = createClient();
   const { error } = await supabase.from("batches").delete().eq("id", id);
+  if (error) throw new Error(error.message);
+}
+
+export async function updateBatchStage(batchId: string, stage: PlantStageStatus) {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("batches")
+    .update({ current_stage: stage })
+    .eq("id", batchId);
   if (error) throw new Error(error.message);
 }
 
@@ -100,7 +121,7 @@ export async function getSignedPhotoUrl(storagePath: string): Promise<string> {
   const supabase = createClient();
   const { data, error } = await supabase.storage
     .from("log-photos")
-    .createSignedUrl(storagePath, 60 * 60); // 1 hour
+    .createSignedUrl(storagePath, 60 * 60);
 
   if (error) throw new Error(error.message);
   return data.signedUrl;
@@ -130,7 +151,6 @@ export async function createHarvest(input: HarvestInput) {
 
   if (error) throw new Error(error.message);
 
-  // Mark batch as harvested
   const { error: updateError } = await supabase
     .from("batches")
     .update({ status: "harvested" })

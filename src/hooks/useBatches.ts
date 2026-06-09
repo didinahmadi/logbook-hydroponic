@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import type { Batch, BatchWithPlant } from "@/types";
+import type { BatchWithPlant } from "@/types";
 
 export function useBatches() {
   const [batches, setBatches] = useState<BatchWithPlant[]>([]);
@@ -55,18 +55,22 @@ export function useBatch(id: string) {
   const [error, setError] = useState<string | null>(null);
   const supabase = createClient();
 
-  useEffect(() => {
-    supabase
+  async function fetchBatch() {
+    setLoading(true);
+    const { data, error } = await supabase
       .from("batches")
       .select("*, plant:plants(*)")
       .eq("id", id)
-      .single()
-      .then(({ data, error }) => {
-        if (error) setError(error.message);
-        else setBatch(data as BatchWithPlant);
-        setLoading(false);
-      });
+      .single();
+
+    if (error) setError(error.message);
+    else setBatch(data as BatchWithPlant);
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    fetchBatch();
   }, [id]);
 
-  return { batch, loading, error };
+  return { batch, loading, error, refetch: fetchBatch };
 }
