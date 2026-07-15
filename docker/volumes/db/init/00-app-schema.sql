@@ -226,13 +226,21 @@ create policy "Users can delete own log photos in storage"
 -- =============================================================
 
 insert into public.plants (id, name, harvest_days, ph_min, ph_max, description) values
-  ('11111111-1111-1111-1111-111111111111', 'Pakcoy',   35, 5.5, 6.5, 'Sayuran hijau populer untuk hidroponik, tumbuh cepat dan mudah dirawat'),
-  ('22222222-2222-2222-2222-222222222222', 'Selada',   30, 5.5, 6.5, 'Selada hijau segar, cocok untuk sistem NFT dan DWC'),
-  ('33333333-3333-3333-3333-333333333333', 'Kangkung', 21, 5.5, 6.5, 'Tumbuh sangat cepat, ideal untuk pemula hidroponik'),
-  ('44444444-4444-4444-4444-444444444444', 'Bayam',    25, 6.0, 7.0, 'Kaya nutrisi, tumbuh baik di sistem hidroponik'),
-  ('55555555-5555-5555-5555-555555555555', 'Brokoli',  70, 6.0, 7.0, 'Sayuran cruciferous kaya vitamin, butuh nutrisi lebih tinggi di fase pembentukan kepala'),
-  ('66666666-6666-6666-6666-666666666666', 'Cabe',     90, 5.5, 6.5, 'Tanaman buah pedas, butuh nutrisi tinggi di fase berbunga dan berbuah'),
-  ('77777777-7777-7777-7777-777777777777', 'Tomat',    80, 5.5, 6.5, 'Buah populer yang tumbuh baik di sistem DWC dan NFT, butuh support saat berbuah')
+  ('11111111-1111-1111-1111-111111111111', 'Pakcoy',   35,  5.5, 6.5, 'Sayuran hijau populer untuk hidroponik, tumbuh cepat dan mudah dirawat'),
+  ('22222222-2222-2222-2222-222222222222', 'Selada',   30,  5.5, 6.5, 'Selada hijau segar, cocok untuk sistem NFT dan DWC'),
+  ('33333333-3333-3333-3333-333333333333', 'Kangkung', 21,  5.5, 6.5, 'Tumbuh sangat cepat, ideal untuk pemula hidroponik'),
+  ('44444444-4444-4444-4444-444444444444', 'Bayam',    25,  6.0, 7.0, 'Kaya nutrisi, tumbuh baik di sistem hidroponik'),
+  ('55555555-5555-5555-5555-555555555555', 'Brokoli',  70,  6.0, 7.0, 'Sayuran cruciferous kaya vitamin, butuh nutrisi lebih tinggi di fase pembentukan kepala'),
+  ('66666666-6666-6666-6666-666666666666', 'Cabe',     90,  5.5, 6.5, 'Tanaman buah pedas, butuh nutrisi tinggi di fase berbunga dan berbuah'),
+  ('77777777-7777-7777-7777-777777777777', 'Tomat',    80,  5.5, 6.5, 'Buah populer yang tumbuh baik di sistem DWC dan NFT, butuh support saat berbuah'),
+  ('88888888-8888-8888-8888-888888888888', 'Melon',     90,  5.5, 6.8, 'Buah manis populer, butuh nutrisi tinggi saat pembentukan dan pematangan buah'),
+  ('99999999-9999-9999-9999-999999999999', 'Anggur',   150, 6.0, 6.5, 'Buah merambat cocok untuk polybag dan lahan kecil, butuh pruning rutin'),
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Zukini',      55,  6.0, 7.0, 'Sayuran buah tumbuh cepat, produktif, cocok untuk pot besar atau polybag'),
+  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'Mentimun',   45,  5.5, 6.5, 'Tumbuh merambat, butuh ajir, hasil panen cepat dan melimpah'),
+  ('cccccccc-cccc-cccc-cccc-cccccccccccc', 'Buncis',     60,  6.0, 7.0, 'Polong hijau bergizi, cocok untuk sistem NFT atau polybag'),
+  ('dddddddd-dddd-dddd-dddd-dddddddddddd', 'Paprika',    90,  6.0, 6.5, 'Paprika manis warna-warni, butuh sinar matahari penuh dan nutrisi stabil'),
+  ('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', 'Sawi Putih', 45,  6.0, 7.0, 'Sayuran daun renyah populer untuk tumisan dan sup, tumbuh cepat di iklim sejuk'),
+  ('ffffffff-ffff-ffff-ffff-ffffffffffff', 'Semangka',   80,  5.5, 6.5, 'Buah besar berair, butuh lahan atau polybag besar dan sinar matahari penuh')
 on conflict (id) do nothing;
 
 -- Pakcoy stages
@@ -285,4 +293,64 @@ insert into public.plant_stages (plant_id, day_from, day_to, ppm_min, ppm_max) v
   ('77777777-7777-7777-7777-777777777777', 15, 30, 1200, 1500),
   ('77777777-7777-7777-7777-777777777777', 31, 55, 1500, 2000),
   ('77777777-7777-7777-7777-777777777777', 56, 80, 2000, 2500)
+on conflict do nothing;
+
+-- Melon stages
+insert into public.plant_stages (plant_id, day_from, day_to, ppm_min, ppm_max) values
+  ('88888888-8888-8888-8888-888888888888', 1,  14, 600,  800),
+  ('88888888-8888-8888-8888-888888888888', 15, 35, 900,  1200),
+  ('88888888-8888-8888-8888-888888888888', 36, 65, 1400, 1800),
+  ('88888888-8888-8888-8888-888888888888', 66, 90, 1800, 2200)
+on conflict do nothing;
+
+-- Anggur stages
+insert into public.plant_stages (plant_id, day_from, day_to, ppm_min, ppm_max) values
+  ('99999999-9999-9999-9999-999999999999', 1,   20,  600,  900),
+  ('99999999-9999-9999-9999-999999999999', 21,  60,  900,  1300),
+  ('99999999-9999-9999-9999-999999999999', 61,  100, 1300, 1700),
+  ('99999999-9999-9999-9999-999999999999', 101, 150, 1600, 2000)
+on conflict do nothing;
+
+-- Zukini stages
+insert into public.plant_stages (plant_id, day_from, day_to, ppm_min, ppm_max) values
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 1,  14, 600,  900),
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 15, 30, 1000, 1400),
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 31, 55, 1400, 1800)
+on conflict do nothing;
+
+-- Mentimun stages
+insert into public.plant_stages (plant_id, day_from, day_to, ppm_min, ppm_max) values
+  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 1,  10, 500,  800),
+  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 11, 25, 900,  1200),
+  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 26, 45, 1200, 1600)
+on conflict do nothing;
+
+-- Buncis stages
+insert into public.plant_stages (plant_id, day_from, day_to, ppm_min, ppm_max) values
+  ('cccccccc-cccc-cccc-cccc-cccccccccccc', 1,  14, 500,  800),
+  ('cccccccc-cccc-cccc-cccc-cccccccccccc', 15, 35, 900,  1200),
+  ('cccccccc-cccc-cccc-cccc-cccccccccccc', 36, 60, 1200, 1600)
+on conflict do nothing;
+
+-- Paprika stages
+insert into public.plant_stages (plant_id, day_from, day_to, ppm_min, ppm_max) values
+  ('dddddddd-dddd-dddd-dddd-dddddddddddd', 1,  14, 700,  900),
+  ('dddddddd-dddd-dddd-dddd-dddddddddddd', 15, 40, 1000, 1400),
+  ('dddddddd-dddd-dddd-dddd-dddddddddddd', 41, 65, 1400, 1800),
+  ('dddddddd-dddd-dddd-dddd-dddddddddddd', 66, 90, 1800, 2200)
+on conflict do nothing;
+
+-- Sawi Putih stages
+insert into public.plant_stages (plant_id, day_from, day_to, ppm_min, ppm_max) values
+  ('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', 1,  10, 500,  700),
+  ('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', 11, 25, 800,  1000),
+  ('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', 26, 45, 1000, 1300)
+on conflict do nothing;
+
+-- Semangka stages
+insert into public.plant_stages (plant_id, day_from, day_to, ppm_min, ppm_max) values
+  ('ffffffff-ffff-ffff-ffff-ffffffffffff', 1,  14, 600,  900),
+  ('ffffffff-ffff-ffff-ffff-ffffffffffff', 15, 35, 1000, 1400),
+  ('ffffffff-ffff-ffff-ffff-ffffffffffff', 36, 60, 1400, 1800),
+  ('ffffffff-ffff-ffff-ffff-ffffffffffff', 61, 80, 1600, 2000)
 on conflict do nothing;

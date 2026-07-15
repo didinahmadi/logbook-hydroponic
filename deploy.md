@@ -119,7 +119,7 @@ Isi:
 
 server {
     listen 80;
-    server_name domain-kamu.com www.domain-kamu.com;
+    server_name bertani.zamannow.net www.bertani.zamannow.net;
 
     location / {
         proxy_pass http://localhost:3000;
@@ -143,7 +143,7 @@ sudo systemctl reload nginx
 
 
 sudo apt install -y certbot python3-certbot-nginx
-sudo certbot --nginx -d domain-kamu.com -d www.domain-kamu.com
+sudo certbot --nginx -d bertani.zamannow.net -d www.bertani.zamannow.net
 Ikuti promptnya, masukkan email, setujui terms. Certbot otomatis update config Nginx dengan HTTPS dan set up auto-renewal.
 
 Part 5 — Update App di VPS (untuk deploy berikutnya)
