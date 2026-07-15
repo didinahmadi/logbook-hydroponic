@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { ImagePlus, X } from "lucide-react";
+import { Camera, ImagePlus, X } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -69,6 +69,7 @@ export function AddLogDialog({ batchId, growingMethod = "hydroponic", onSuccess 
   const [photos, setPhotos] = useState<PhotoPreview[]>([]);
   const [saving, setSaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? []);
@@ -295,13 +296,22 @@ export function AddLogDialog({ batchId, growingMethod = "hydroponic", onSuccess 
             <div className="flex items-center justify-between">
               <span className="text-xs text-gray-500">{photos.length}/{MAX_PHOTOS} foto</span>
               {photos.length < MAX_PHOTOS && (
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="text-xs text-green-600 hover:text-green-700 font-medium flex items-center gap-1"
-                >
-                  <ImagePlus className="h-3.5 w-3.5" /> Tambah Foto
-                </button>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => cameraInputRef.current?.click()}
+                    className="text-xs text-green-600 hover:text-green-700 font-medium flex items-center gap-1"
+                  >
+                    <Camera className="h-3.5 w-3.5" /> Ambil Foto
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="text-xs text-green-600 hover:text-green-700 font-medium flex items-center gap-1"
+                  >
+                    <ImagePlus className="h-3.5 w-3.5" /> Pilih dari Galeri
+                  </button>
+                </div>
               )}
             </div>
 
@@ -313,16 +323,34 @@ export function AddLogDialog({ batchId, growingMethod = "hydroponic", onSuccess 
               className="hidden"
               onChange={handleFileChange}
             />
+            <input
+              ref={cameraInputRef}
+              type="file"
+              accept="image/*"
+              capture="environment"
+              className="hidden"
+              onChange={handleFileChange}
+            />
 
             {photos.length === 0 ? (
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="w-full border-2 border-dashed border-gray-200 rounded-lg py-5 text-sm text-gray-400 hover:border-green-300 hover:text-green-600 transition-colors flex flex-col items-center gap-1"
-              >
-                <ImagePlus className="h-5 w-5" />
-                <span>Klik untuk tambah foto (maks. {MAX_PHOTOS})</span>
-              </button>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => cameraInputRef.current?.click()}
+                  className="border-2 border-dashed border-gray-200 rounded-lg py-5 text-sm text-gray-400 hover:border-green-300 hover:text-green-600 transition-colors flex flex-col items-center gap-1"
+                >
+                  <Camera className="h-5 w-5" />
+                  <span>Ambil Foto</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="border-2 border-dashed border-gray-200 rounded-lg py-5 text-sm text-gray-400 hover:border-green-300 hover:text-green-600 transition-colors flex flex-col items-center gap-1"
+                >
+                  <ImagePlus className="h-5 w-5" />
+                  <span>Galeri (maks. {MAX_PHOTOS})</span>
+                </button>
+              </div>
             ) : (
               <div className="space-y-2">
                 {photos.map((photo, i) => (
